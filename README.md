@@ -7,7 +7,7 @@
 - Jeopardy-style board: 4 categories × 5 point values (100–500).
 - Categories: أكمل الآية · الخاتمة · ما بعدها؟ · من أي سورة؟
 - Players take turns picking a tile; a wrong answer lets the next player steal for half points.
-- Lifeline per player: ٥٠:٥٠. One hidden double-points tile.
+- Lifeline per player: ٥٠:٥٠.
 
 ## Text accuracy rule
 
@@ -54,7 +54,7 @@ npm run build   # regenerate content, typecheck, build to dist/
 - `src/data.ts` loads `corpus.json`, `questions.json`, `surahs.json` and rebuilds all displayed text from word addresses.
 - `src/board.ts` fills each tile with a random question from its category × level pool; no ayah appears in two
   questions on one board; questions already shown on this device (localStorage) are skipped until the pool runs out.
-- `src/main.ts` runs the game: turns, timer, 50:50, steal for half points, double tile, reveal with sources.
+- `src/main.ts` runs the game: turns, timer, 50:50, steal for half points, reveal with sources.
 
 ## Layout
 

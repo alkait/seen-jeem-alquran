@@ -224,7 +224,6 @@
   }
   .chip .lbl { font-family: 'Cairo'; font-weight: 700; font-size: 14px; opacity: .85; }
   .chip.val { background: linear-gradient(180deg, #ffe07a, var(--gold-deep)); color: #4a2500; }
-  .chip.dbl { background: linear-gradient(90deg, var(--pink), #ff9a3d); animation: pulse 1s infinite; }
   .timer { position: relative; width: 70px; height: 70px; }
   .timer svg { transform: rotate(-90deg); }
   .timer .num { position: absolute; inset: 0; display: grid; place-items: center; font-family: 'Lalezar'; font-size: 28px; }

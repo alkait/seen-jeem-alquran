@@ -1,7 +1,7 @@
 import './style.css';
 import { type Category, Data, type Option, type Question, type Ref } from './data.ts';
 import { markSeen, pickBoard, pools } from './board.ts';
-import { confetti, sfx, stars, toast } from './fx.ts';
+import { confetti, sfx, stars } from './fx.ts';
 
 const CATS: { key: Category; name: string; color: string }[] = [
   { key: 'complete', name: 'أكمل الآية', color: '#ff8a3d' },
@@ -29,7 +29,6 @@ let board: Question[][];
 let players: Player[] = [];
 let turn = 0;
 let used = new Set<string>();
-let doubleCell = '';
 
 // ---------- start screen ----------
 stars();
@@ -123,7 +122,6 @@ function newGame() {
   board = pickBoard(pool);
   used = new Set();
   turn = 0;
-  doubleCell = `${Math.floor(Math.random() * CATS.length)}-${1 + Math.floor(Math.random() * 4)}`;
   show('board-screen');
   $('players').style.display = 'flex';
   buildBoard();
@@ -237,14 +235,11 @@ function openQ(ci: number, r: number) {
   const cat = CATS[ci];
   const q = board[ci][r];
   markSeen(q.id);
-  const isDouble = `${ci}-${r}` === doubleCell;
-  cur = { ci, r, q, value: LEVELS[r] * (isDouble ? 2 : 1), answerer: turn, stealing: false, tried: new Set() };
-  if (isDouble) toast('✨ خانة مضاعفة! النقاط × ٢');
+  cur = { ci, r, q, value: LEVELS[r], answerer: turn, stealing: false, tried: new Set() };
 
   $('qmeta').innerHTML = `
     <span class="chip" style="--cc:${cat.color}"><span class="lbl">التصنيف:</span> ${cat.name}</span>
-    <span class="chip val">${ar(cur.value)}</span>
-    ${isDouble ? '<span class="chip dbl">× ٢</span>' : ''}`;
+    <span class="chip val">${ar(cur.value)}</span>`;
   $('ask').innerHTML = askText(q);
   $('ayah').innerHTML = promptHtml(q);
 
