@@ -31,24 +31,37 @@ export function pickBoard(pool: Question[][][]): Question[][] {
   // Fill the scarcest pools first, so they aren't blocked by ayahs taken elsewhere.
   const cells = pool.flatMap((row, c) => row.map((p, l) => ({ c, l, size: p.length }))).sort((x, y) => x.size - y.size);
   for (const { c, l } of cells) {
-    const free = (q: Question) => touchedAyahs(q).every(k => !touched.has(k));
-    let candidates = pool[c][l].filter(q => !seen.has(q.id) && free(q));
-    if (!candidates.length) {
-      // Everything here has been shown on this device: start the pool over.
-      for (const q of pool[c][l]) seen.delete(q.id);
-      localStorage.setItem(SEEN_KEY, JSON.stringify([...seen]));
-      candidates = pool[c][l].filter(free);
-    }
-    if (!candidates.length) {
-      // Nearest level of the same category as a last resort.
-      for (const d of [1, -1, 2, -2, 3, -3, 4, -4]) {
-        candidates = (pool[c][l + d] ?? []).filter(free);
-        if (candidates.length) break;
-      }
-    }
-    const q = candidates[Math.floor(Math.random() * candidates.length)];
+    const q = pickCell(pool, c, l, seen, touched);
     board[c][l] = q;
     for (const k of touchedAyahs(q)) touched.add(k);
   }
   return board;
+}
+
+// A fresh question for one tile (after «تراجع»), avoiding every ayah already on the board,
+// including the skipped question's.
+export function replaceQuestion(pool: Question[][][], board: Question[][], c: number, l: number): Question {
+  const touched = new Set(board.flat().flatMap(touchedAyahs));
+  const q = pickCell(pool, c, l, loadSeen(), touched, board[c][l].id);
+  board[c][l] = q;
+  return q;
+}
+
+function pickCell(pool: Question[][][], c: number, l: number, seen: Set<string>, touched: Set<string>, exclude?: string): Question {
+  const free = (q: Question) => q.id !== exclude && touchedAyahs(q).every(k => !touched.has(k));
+  let candidates = pool[c][l].filter(q => !seen.has(q.id) && free(q));
+  if (!candidates.length) {
+    // Everything here has been shown on this device: start the pool over.
+    for (const q of pool[c][l]) seen.delete(q.id);
+    localStorage.setItem(SEEN_KEY, JSON.stringify([...seen]));
+    candidates = pool[c][l].filter(free);
+  }
+  if (!candidates.length) {
+    // Nearest level of the same category as a last resort.
+    for (const d of [1, -1, 2, -2, 3, -3, 4, -4]) {
+      candidates = (pool[c][l + d] ?? []).filter(free);
+      if (candidates.length) break;
+    }
+  }
+  return candidates[Math.floor(Math.random() * candidates.length)];
 }

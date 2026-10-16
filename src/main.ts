@@ -1,6 +1,6 @@
 import './style.css';
 import { type Category, Data, type Option, type Question, type Ref } from './data.ts';
-import { markSeen, pickBoard, pools } from './board.ts';
+import { markSeen, pickBoard, pools, replaceQuestion } from './board.ts';
 import { confetti, sfx, stars } from './fx.ts';
 
 const CATS: { key: Category; name: string; color: string }[] = [
@@ -354,7 +354,7 @@ $('skipBtn').onclick = () => {
   const res = $('result');
   res.innerHTML = `
     <div class="msg" style="color:#ffe9a8">↩︎ تخطّي هذا السؤال؟</div>
-    <div class="ref">لن تُحتسب نقاط، ولن يعود السؤال إلى اللوحة.</div>
+    <div class="ref">لن تُحتسب نقاط، وستبقى الخانة متاحة بسؤال جديد.</div>
     <div class="acts">
       <button class="act-btn steal" id="skipYes">نعم، تخطَّ</button>
       <button class="act-btn" id="skipNo">لا، أكمل</button>
@@ -370,17 +370,14 @@ $('skipBtn').onclick = () => {
 
 function skipQuestion() {
   $('options').classList.remove('paused');
-  const t = $(`t-${cur.ci}-${cur.r}`);
-  used.add(t.id);
-  t.classList.add('used');
-  t.innerHTML = '<span class="badge">↩︎</span>';
+  // The tile stays open with a fresh question; the skipped one counts as seen.
+  replaceQuestion(pool, board, cur.ci, cur.r);
   $('overlay').classList.remove('show');
   // Skipped before anyone answered: the same player picks again.
   // Skipped during a steal: the question was played, so the turn moves on.
   if (cur.stealing) turn = (turn + 1) % players.length;
   renderPlayers();
-  if (used.size === LEVELS.length * CATS.length) endGame();
-  else announceTurn();
+  announceTurn();
 }
 
 function updateTimer() {
