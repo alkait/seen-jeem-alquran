@@ -107,9 +107,11 @@ $('playBtn').onclick = () => {
   }));
   newGame();
 };
+// Back to the start screen, where players can be changed before the next game.
 $('againBtn').onclick = () => {
-  players.forEach(p => { p.score = 0; p.half = true; });
-  newGame();
+  sfx.click();
+  $('players').style.display = 'none';
+  show('start');
 };
 $('endBtn').onclick = endGame;
 
