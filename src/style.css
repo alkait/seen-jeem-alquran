@@ -123,12 +123,31 @@
   #board-screen { flex-direction: column; padding: 18px 24px 130px; gap: 16px; }
   .topbar { display: flex; align-items: center; justify-content: space-between; }
   .mini-logo { font-family: 'Lalezar'; font-size: clamp(28px, 4.5vh, 40px); color: var(--gold); text-shadow: 0 3px 0 #7a3f00, 0 0 20px rgba(255,207,74,.4); }
+  /* Turn line in the top bar: plain text, not a button. */
   .turn-banner {
-    font-family: 'Lalezar'; font-size: 24px; padding: 8px 26px; border-radius: 999px;
-    background: var(--c); color: #fff; box-shadow: 0 5px 0 rgba(0,0,0,.35), 0 0 30px var(--c);
+    font-family: 'Lalezar'; font-size: 28px; color: #fff;
     display: flex; align-items: center; gap: 10px;
-    animation: bob 1.6s ease-in-out infinite;
   }
+  .turn-banner .tb-av { font-size: 32px; filter: drop-shadow(0 0 10px var(--c)); }
+  .turn-banner .tb-name { color: var(--c); text-shadow: 0 0 18px var(--c), 0 2px 0 rgba(0,0,0,.4); }
+  .turn-banner .tb-hint { font-family: 'Cairo'; font-weight: 700; font-size: 17px; color: #c9c1ff; }
+
+  /* Centre-stage turn announcement */
+  .turn-splash {
+    position: fixed; inset: 0; z-index: 15; display: none;
+    align-items: center; justify-content: center;
+    background: radial-gradient(circle at center, rgba(20, 12, 70, .9), rgba(5, 4, 25, .8));
+    backdrop-filter: blur(6px);
+    cursor: pointer;
+  }
+  .turn-splash.show { display: flex; }
+  .ts-inner { display: flex; flex-direction: column; align-items: center; gap: 14px; }
+  .ts-inner .av { width: 140px; height: 140px; font-size: 76px; border-width: 6px; box-shadow: 0 10px 0 rgba(0,0,0,.35), 0 0 60px var(--c); }
+  .ts-text {
+    font-family: 'Lalezar'; font-size: clamp(56px, 9vw, 96px); line-height: 1.1; color: #fff;
+    text-shadow: 0 6px 0 rgba(0,0,0,.35), 0 0 40px rgba(255,255,255,.25);
+  }
+  .ts-text span { color: var(--c); text-shadow: 0 6px 0 rgba(0,0,0,.35), 0 0 40px var(--c); }
   @keyframes bob { 0%,100% { transform: translateY(0) } 50% { transform: translateY(-4px) } }
   .ghost-btn {
     font-family: 'Cairo'; font-weight: 700; font-size: 15px; padding: 8px 18px; border-radius: 12px;
@@ -347,3 +366,4 @@
   .av-card .av:hover { transform: scale(1.08) rotate(-4deg); }
   .result .ref .tanzil { color: #ffe9a8; text-decoration: none; border-bottom: 1px dashed currentColor; }
   .result .ref .tanzil:hover { color: #fff; }
+  .options.paused { pointer-events: none; opacity: .45; }

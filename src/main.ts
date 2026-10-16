@@ -128,6 +128,7 @@ function newGame() {
   $('players').style.display = 'flex';
   buildBoard();
   renderPlayers();
+  announceTurn();
 }
 
 function buildBoard() {
@@ -162,7 +163,38 @@ function renderPlayers() {
   const p = players[turn];
   const tb = $('turnBanner');
   tb.style.setProperty('--c', p.color);
-  tb.innerHTML = `${p.avatar} دور ${p.name} — اختر سؤالاً!`;
+  tb.innerHTML = `<span class="tb-av">${p.avatar}</span> دور <span class="tb-name">${p.name}</span> <span class="tb-hint">— اختر سؤالاً</span>`;
+}
+
+// "دور أيمن" pops up in the centre, then shrinks into the banner at the top.
+// Tapping anywhere skips the animation.
+function announceTurn() {
+  const p = players[turn];
+  const tb = $('turnBanner'), splash = $('turnSplash'), inner = $('turnSplashInner');
+  inner.style.setProperty('--c', p.color);
+  inner.innerHTML = `<div class="av" style="--c:${p.color}">${p.avatar}</div><div class="ts-text">دور <span>${p.name}</span></div>`;
+  tb.style.opacity = '0';
+  splash.classList.add('show');
+  sfx.open();
+  const to = tb.getBoundingClientRect(), from = inner.getBoundingClientRect();
+  const dx = to.left + to.width / 2 - (from.left + from.width / 2);
+  const dy = to.top + to.height / 2 - (from.top + from.height / 2);
+  const duration = 1900;
+  const anim = inner.animate([
+    { transform: 'scale(0) rotate(-12deg)', opacity: 0, offset: 0 },
+    { transform: 'scale(1.18) rotate(4deg)', opacity: 1, offset: 0.16 },
+    { transform: 'scale(.95) rotate(-2deg)', opacity: 1, offset: 0.24 },
+    { transform: 'scale(1) rotate(0)', opacity: 1, offset: 0.3 },
+    { transform: 'scale(1) rotate(0)', opacity: 1, offset: 0.68 },
+    { transform: `translate(${dx}px, ${dy}px) scale(.25)`, opacity: 0, offset: 1 },
+  ], { duration, easing: 'ease-in-out' });
+  const backdrop = splash.animate([{ opacity: 0 }, { opacity: 1, offset: 0.12 }, { opacity: 1, offset: 0.68 }, { opacity: 0 }], { duration });
+  anim.onfinish = () => {
+    splash.classList.remove('show');
+    tb.style.opacity = '';
+    tb.animate([{ transform: 'scale(.7)', opacity: 0 }, { transform: 'scale(1.1)', opacity: 1, offset: 0.6 }, { transform: 'scale(1)', opacity: 1 }], { duration: 450, easing: 'ease-out' });
+  };
+  splash.onclick = () => { backdrop.finish(); anim.finish(); };
 }
 
 // ---------- question ----------
@@ -296,12 +328,59 @@ function startTimer() {
   fg.style.strokeDashoffset = '0';
   requestAnimationFrame(() => { fg.style.transition = ''; });
   updateTimer();
+  runTimer();
+}
+
+// Ticks from the current timeLeft; also used to resume after a cancelled skip.
+function runTimer() {
+  clearInterval(timerId);
+  $('skipBtn').style.display = '';
   timerId = window.setInterval(() => {
     timeLeft--;
     updateTimer();
     if (timeLeft <= 5 && timeLeft > 0) sfx.tick();
     if (timeLeft <= 0) { clearInterval(timerId); answer(null, null); }
   }, 1000);
+}
+
+// ---------- skip (تراجع) ----------
+// Available while the timer runs, e.g. when someone opened a tile out of turn.
+// Pauses the timer and asks; a confirmed skip retires the tile with no points.
+$('skipBtn').onclick = () => {
+  clearInterval(timerId);
+  sfx.click();
+  $('skipBtn').style.display = 'none';
+  $('options').classList.add('paused');
+  const res = $('result');
+  res.innerHTML = `
+    <div class="msg" style="color:#ffe9a8">↩︎ تخطّي هذا السؤال؟</div>
+    <div class="ref">لن تُحتسب نقاط، ولن يعود السؤال إلى اللوحة.</div>
+    <div class="acts">
+      <button class="act-btn steal" id="skipYes">نعم، تخطَّ</button>
+      <button class="act-btn" id="skipNo">لا، أكمل</button>
+    </div>`;
+  res.className = 'result show';
+  $('skipYes').onclick = skipQuestion;
+  $('skipNo').onclick = () => {
+    $('options').classList.remove('paused');
+    res.className = 'result';
+    runTimer();
+  };
+};
+
+function skipQuestion() {
+  $('options').classList.remove('paused');
+  const t = $(`t-${cur.ci}-${cur.r}`);
+  used.add(t.id);
+  t.classList.add('used');
+  t.innerHTML = '<span class="badge">↩︎</span>';
+  $('overlay').classList.remove('show');
+  // Skipped before anyone answered: the same player picks again.
+  // Skipped during a steal: the question was played, so the turn moves on.
+  if (cur.stealing) turn = (turn + 1) % players.length;
+  renderPlayers();
+  if (used.size === LEVELS.length * CATS.length) endGame();
+  else announceTurn();
 }
 
 function updateTimer() {
@@ -312,6 +391,7 @@ function updateTimer() {
 
 function answer(btn: HTMLButtonElement | null, o: Option | null) {
   clearInterval(timerId);
+  $('skipBtn').style.display = 'none';
   optButtons().forEach(b => b.disabled = true);
   ($('life5050') as HTMLButtonElement).disabled = true;
   const p = players[cur.answerer];
@@ -395,6 +475,7 @@ function closeQ() {
   renderPlayers();
   $(`sc-${scored}`).classList.add('pop');
   if (used.size === LEVELS.length * CATS.length) endGame();
+  else if (players.length > 1) announceTurn();
 }
 
 // ---------- end ----------
