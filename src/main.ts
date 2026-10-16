@@ -407,10 +407,19 @@ function endGame() {
   $('winnerTitle').textContent = `🏆 ${ranked[0].name}`;
   const order = ranked.length >= 3 ? [ranked[1], ranked[0], ranked[2], ...ranked.slice(3)] : ranked.length === 2 ? [ranked[1], ranked[0]] : ranked;
   const heights = [220, 160, 120, 90];
+  const MEDALS = [
+    { icon: '🥇', color: '#ffcf4a' },
+    { icon: '🥈', color: '#cfd8e3' },
+    { icon: '🥉', color: '#d98a4e' },
+    { icon: '🎖️', color: 'rgba(255,255,255,.35)' },
+  ];
   $('podium').innerHTML = order.map(p => {
     const rk = ranked.indexOf(p);
+    const medal = MEDALS[rk];
     return `<div class="step"><div class="av" style="--c:${p.color}">${p.avatar}</div><div class="nm">${p.name}</div>
-      <div class="blk" style="height:${heights[rk]}px"><div class="rank">${ar(rk + 1)}</div><div class="pts">${ar(p.score)} نقطة</div></div></div>`;
+      <div class="blk" style="height:${heights[rk]}px; --c:${p.color}; --medal:${medal.color}">
+        <div class="medal">${medal.icon}</div><div class="pts">${ar(p.score)} <small>نقطة</small></div>
+      </div></div>`;
   }).join('');
   show('end');
   sfx.right();

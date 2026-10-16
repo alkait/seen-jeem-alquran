@@ -15,16 +15,22 @@
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   html, body { height: 100%; }
+  html { background: var(--night-1); }
   body {
     font-family: 'Cairo', sans-serif;
     color: #fff;
+    overflow-x: hidden;
+    min-height: 100vh;
+  }
+  /* Sky gradient pinned to the viewport, so it never tiles on tall pages. */
+  body::after {
+    content: '';
+    position: fixed; inset: 0; z-index: -1;
     background:
       radial-gradient(ellipse at 50% -10%, #3b23b8 0%, transparent 55%),
       radial-gradient(ellipse at 100% 100%, #5a1470 0%, transparent 45%),
       radial-gradient(ellipse at 0% 100%, #0c3a6b 0%, transparent 45%),
       linear-gradient(180deg, var(--night-2), var(--night-1));
-    overflow-x: hidden;
-    min-height: 100vh;
   }
   /* Islamic 8-point star pattern overlay */
   body::before {
@@ -309,14 +315,23 @@
   .podium { display: flex; align-items: flex-end; gap: 18px; }
   .step { display: flex; flex-direction: column; align-items: center; gap: 10px; }
   .step .av { width: 86px; height: 86px; font-size: 44px; }
+  /* Pedestals: dark glass in the player's colour, medal-coloured top edge. */
   .step .blk {
-    width: 150px; border-radius: 18px 18px 6px 6px; display: flex; flex-direction: column; align-items: center; justify-content: flex-start;
-    padding-top: 14px; font-family: 'Lalezar'; color: #3a1d00;
-    background: linear-gradient(180deg, #fff0a8, var(--gold) 30%, var(--gold-deep));
-    box-shadow: 0 10px 30px rgba(0,0,0,.5);
+    position: relative; width: 150px; border-radius: 10px 10px 0 0;
+    display: flex; flex-direction: column; align-items: center; gap: 6px; padding-top: 16px;
+    background:
+      linear-gradient(180deg, color-mix(in srgb, var(--c) 45%, transparent), rgba(10, 8, 40, .55) 70%),
+      rgba(255, 255, 255, .04);
+    border: 2px solid color-mix(in srgb, var(--c) 70%, transparent);
+    border-bottom: none;
+    border-top: 6px solid var(--medal);
+    box-shadow: 0 0 40px color-mix(in srgb, var(--c) 35%, transparent), inset 0 1px 0 rgba(255, 255, 255, .15);
+    backdrop-filter: blur(4px);
   }
-  .step .blk .rank { font-size: 48px; line-height: 1; }
-  .step .blk .pts { font-size: 22px; }
+  .step .blk .medal { font-size: 40px; line-height: 1; filter: drop-shadow(0 4px 8px rgba(0,0,0,.4)); }
+  .step .blk .pts { font-family: 'Lalezar'; font-size: 26px; color: #fff; text-shadow: 0 2px 0 rgba(0,0,0,.35); }
+  .step .blk .pts small { font-family: 'Cairo'; font-weight: 700; font-size: 14px; opacity: .8; }
+  .podium { border-bottom: 3px solid rgba(255, 207, 74, .35); padding: 0 12px; }
   .step .nm { font-weight: 900; font-size: 20px; }
 
   canvas#confetti { position: fixed; inset: 0; pointer-events: none; z-index: 50; }
