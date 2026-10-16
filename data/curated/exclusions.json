@@ -1,0 +1,22 @@
+{
+  "_comment": "Ayahs not used in a fun setting, as the source ayah or as any option. Keywords match the normalized (diacritics-free) text. 'reportOnly' groups are counted in the report but not excluded.",
+  "surahs": [
+    111
+  ],
+  "ayahs": [],
+  "keywords": [
+    "لعن",
+    "محيض",
+    "الزني",
+    "زاني",
+    "زانيه",
+    "حرث لكم"
+  ],
+  "reportOnly": {
+    "punishment": [
+      "عذاب",
+      "جهنم",
+      "النار"
+    ]
+  }
+}

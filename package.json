@@ -1,0 +1,20 @@
+{
+  "name": "seen-jeem-alquran",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "corpus": "tsx scripts/build-corpus.ts",
+    "generate": "tsx scripts/generate.ts",
+    "preview": "tsx scripts/preview.ts",
+    "content": "npm run corpus && npm run generate",
+    "data": "mkdir -p public/data && cp data/build/corpus.json data/build/questions.json data/curated/surahs.json public/data/",
+    "dev": "npm run data && vite",
+    "build": "npm run content && npm run data && tsc -p . && vite build"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.5",
+    "tsx": "^4.23.15",
+    "typescript": "^7.0.2",
+    "vite": "^8.3.4"
+  }
+}

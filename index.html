@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>سين جيم القرآن</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌙</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Amiri+Quran&family=Lalezar&family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+</head>
+<body>
+<div class="stars" id="stars"></div>
+<canvas id="confetti"></canvas>
+<div class="toast" id="toast"></div>
+
+<!-- START -->
+<section class="screen active" id="start">
+  <div class="lantern">🌙</div>
+  <h1 class="logo">سين جيم القرآن</h1>
+  <div class="tagline">✦ أُنس ومُدارسة ✦</div>
+  <div class="tmp-total" id="tmpTotal"></div>
+  <div class="panel">
+    <h3>كم لاعب؟</h3>
+    <div class="count-row" id="countRow"></div>
+    <div class="avatars" id="avatars"></div>
+  </div>
+  <button class="big-btn" id="playBtn" disabled>جارٍ التحميل…</button>
+  <div class="credit">نص القرآن الكريم برواية حفص من <a href="https://tanzil.net" target="_blank" rel="noopener">مشروع تنزيل</a></div>
+</section>
+
+<!-- BOARD -->
+<section class="screen" id="board-screen">
+  <div class="topbar">
+    <div class="mini-logo">سين جيم القرآن</div>
+    <div class="turn-banner" id="turnBanner"></div>
+    <button class="ghost-btn" id="endBtn">🏁 إنهاء اللعبة</button>
+  </div>
+  <div class="board" id="board"></div>
+</section>
+
+<!-- END -->
+<section class="screen" id="end">
+  <div class="crown">👑</div>
+  <h1 class="logo" id="winnerTitle" style="font-size: 72px"></h1>
+  <div class="podium" id="podium"></div>
+  <button class="big-btn" id="againBtn">جولة جديدة</button>
+</section>
+
+<div class="players" id="players" style="display:none"></div>
+
+<!-- QUESTION -->
+<div class="overlay" id="overlay">
+  <div class="qcard" id="qcard">
+    <div class="qhead">
+      <div class="qmeta" id="qmeta"></div>
+      <div class="timer" id="timer">
+        <svg width="70" height="70"><circle class="bg" cx="35" cy="35" r="30"/><circle class="fg" id="timerFg" cx="35" cy="35" r="30"/></svg>
+        <div class="num" id="timerNum"></div>
+      </div>
+    </div>
+    <div class="ask" id="ask"></div>
+    <div class="ayah" id="ayah"></div>
+    <div class="options" id="options"></div>
+    <div class="qfoot">
+      <div class="who" id="who"></div>
+      <div class="lifelines">
+        <button class="life" id="life5050">✂️ ٥٠:٥٠</button>
+      </div>
+    </div>
+    <div class="result" id="result"></div>
+  </div>
+</div>
+
+<script type="module" src="/src/main.ts"></script>
+</body>
+</html>

@@ -1,0 +1,4 @@
+{
+  "_comment": "Ayahs treated as tier 1 regardless of their surah's tier. Format: surah:ayah or surah:from-to.",
+  "ayahs": ["2:255", "2:285-286", "18:1-10", "59:22-24"]
+}

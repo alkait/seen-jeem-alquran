@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>سين جيم القرآن — Mockup</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Amiri+Quran&family=Lalezar&family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --night-1: #07061f;
+    --night-2: #160f4d;
+    --night-3: #2a1680;
+    --gold: #ffcf4a;
+    --gold-deep: #e09a14;
+    --teal: #2ee6c5;
+    --pink: #ff4fa3;
+    --red: #ff4d5e;
+    --green: #2fe08a;
+    --p1: #ff8a3d;
+    --p2: #2ec5ff;
+    --p3: #b46bff;
+    --p4: #2fe08a;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; }
+  body {
+    font-family: 'Cairo', sans-serif;
+    color: #fff;
+    background:
+      radial-gradient(ellipse at 50% -10%, #3b23b8 0%, transparent 55%),
+      radial-gradient(ellipse at 100% 100%, #5a1470 0%, transparent 45%),
+      radial-gradient(ellipse at 0% 100%, #0c3a6b 0%, transparent 45%),
+      linear-gradient(180deg, var(--night-2), var(--night-1));
+    overflow-x: hidden;
+    min-height: 100vh;
+  }
+  /* Islamic 8-point star pattern overlay */
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Cg fill='none' stroke='%23ffcf4a' stroke-width='1'%3E%3Cpath d='M40 10 L48 32 L70 40 L48 48 L40 70 L32 48 L10 40 L32 32 Z'/%3E%3Crect x='25' y='25' width='30' height='30' transform='rotate(45 40 40)'/%3E%3Crect x='25' y='25' width='30' height='30'/%3E%3C/g%3E%3C/svg%3E");
+    opacity: .05;
+    pointer-events: none;
+    z-index: 0;
+  }
+  /* twinkling stars */
+  .stars { position: fixed; inset: 0; pointer-events: none; z-index: 0; }
+  .stars i {
+    position: absolute; width: 2px; height: 2px; border-radius: 50%;
+    background: #fff; animation: twinkle 3s infinite ease-in-out;
+  }
+  @keyframes twinkle { 0%,100% { opacity: .15 } 50% { opacity: .9 } }
+
+  .screen { position: relative; z-index: 1; display: none; min-height: 100vh; }
+  .screen.active { display: flex; }
+
+  /* ---------- START SCREEN ---------- */
+  #start { flex-direction: column; align-items: center; justify-content: center; gap: 28px; padding: 40px 20px; }
+  .lantern { font-size: 56px; filter: drop-shadow(0 0 18px var(--gold)); animation: swing 3s ease-in-out infinite; transform-origin: top center; }
+  @keyframes swing { 0%,100% { transform: rotate(-6deg) } 50% { transform: rotate(6deg) } }
+  .logo {
+    font-family: 'Lalezar', cursive;
+    font-size: clamp(56px, 9vw, 116px);
+    line-height: 1;
+    background: linear-gradient(180deg, #fff6c9 0%, var(--gold) 45%, var(--gold-deep) 100%);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+    filter: drop-shadow(0 6px 0 #7a3f00) drop-shadow(0 0 30px rgba(255,207,74,.45));
+    text-align: center;
+  }
+  .tagline {
+    font-family: 'Lalezar'; font-size: 26px; color: var(--teal);
+    letter-spacing: 1px; text-shadow: 0 0 16px rgba(46,230,197,.6);
+    margin-top: -12px;
+  }
+  .panel {
+    background: linear-gradient(180deg, rgba(255,255,255,.09), rgba(255,255,255,.03));
+    border: 2px solid rgba(255,207,74,.35);
+    border-radius: 28px;
+    padding: 28px 32px;
+    box-shadow: 0 20px 60px rgba(0,0,0,.5), inset 0 1px 0 rgba(255,255,255,.15);
+    backdrop-filter: blur(6px);
+  }
+  .panel h3 { font-family: 'Lalezar'; font-size: 26px; text-align: center; margin-bottom: 18px; color: #ffe9a8; font-weight: normal; }
+  .count-row { display: flex; gap: 14px; justify-content: center; margin-bottom: 22px; }
+  .count-btn {
+    font-family: 'Lalezar'; font-size: 34px; width: 74px; height: 74px; border-radius: 20px;
+    border: none; cursor: pointer; color: #fff;
+    background: linear-gradient(180deg, #4a33d6, #2a1a8c);
+    box-shadow: 0 6px 0 #170c55, 0 10px 20px rgba(0,0,0,.4);
+    transition: transform .12s, box-shadow .12s;
+  }
+  .count-btn:hover { transform: translateY(-3px); }
+  .count-btn.sel {
+    background: linear-gradient(180deg, #ffe07a, var(--gold-deep));
+    color: #4a2500; box-shadow: 0 6px 0 #8a4b00, 0 0 30px rgba(255,207,74,.6);
+  }
+  .avatars { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+  .av-card { display: flex; flex-direction: column; align-items: center; gap: 8px; transition: opacity .25s, transform .25s; }
+  .av-card.off { opacity: .2; transform: scale(.88); }
+  .av {
+    width: 78px; height: 78px; border-radius: 50%; display: grid; place-items: center;
+    font-size: 40px; border: 4px solid #fff;
+    box-shadow: 0 6px 0 rgba(0,0,0,.35), 0 0 22px var(--c);
+    background: radial-gradient(circle at 35% 30%, #fff8, transparent 60%), var(--c);
+  }
+  .av-card input {
+    width: 110px; text-align: center; font-family: 'Cairo'; font-weight: 700; font-size: 16px;
+    background: rgba(0,0,0,.3); border: 2px solid rgba(255,255,255,.2); color: #fff;
+    border-radius: 12px; padding: 6px 8px; outline: none;
+  }
+  .av-card input:focus { border-color: var(--gold); }
+
+  .big-btn {
+    font-family: 'Lalezar'; font-size: 36px; padding: 14px 64px; border: none; border-radius: 22px;
+    cursor: pointer; color: #3a1d00;
+    background: linear-gradient(180deg, #fff0a8 0%, var(--gold) 40%, var(--gold-deep) 100%);
+    box-shadow: 0 8px 0 #8a4b00, 0 14px 30px rgba(0,0,0,.5), 0 0 40px rgba(255,207,74,.35);
+    transition: transform .1s, box-shadow .1s;
+    animation: pulse 2s infinite;
+  }
+  .big-btn:active { transform: translateY(6px); box-shadow: 0 2px 0 #8a4b00; }
+  @keyframes pulse { 0%,100% { filter: brightness(1) } 50% { filter: brightness(1.15) } }
+
+  /* ---------- BOARD SCREEN ---------- */
+  #board-screen { flex-direction: column; padding: 18px 24px 130px; gap: 16px; }
+  .topbar { display: flex; align-items: center; justify-content: space-between; }
+  .mini-logo { font-family: 'Lalezar'; font-size: clamp(28px, 4.5vh, 40px); color: var(--gold); text-shadow: 0 3px 0 #7a3f00, 0 0 20px rgba(255,207,74,.4); }
+  .turn-banner {
+    font-family: 'Lalezar'; font-size: 24px; padding: 8px 26px; border-radius: 999px;
+    background: var(--c); color: #fff; box-shadow: 0 5px 0 rgba(0,0,0,.35), 0 0 30px var(--c);
+    display: flex; align-items: center; gap: 10px;
+    animation: bob 1.6s ease-in-out infinite;
+  }
+  @keyframes bob { 0%,100% { transform: translateY(0) } 50% { transform: translateY(-4px) } }
+  .ghost-btn {
+    font-family: 'Cairo'; font-weight: 700; font-size: 15px; padding: 8px 18px; border-radius: 12px;
+    background: rgba(255,255,255,.08); color: #fff; border: 2px solid rgba(255,255,255,.2); cursor: pointer;
+  }
+  .ghost-btn:hover { background: rgba(255,255,255,.16); }
+
+  .board {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px;
+    max-width: 1100px; width: 100%; margin: 0 auto;
+    padding: 18px; border-radius: 30px;
+    background: linear-gradient(180deg, rgba(0,0,0,.25), rgba(0,0,0,.4));
+    border: 3px solid rgba(255,207,74,.4);
+    box-shadow: 0 0 0 6px rgba(255,207,74,.08), 0 30px 80px rgba(0,0,0,.6), inset 0 0 40px rgba(59,35,184,.4);
+  }
+  .cat {
+    text-align: center; padding: 14px 8px; border-radius: 16px;
+    background: linear-gradient(180deg, var(--cc), color-mix(in srgb, var(--cc) 55%, #000));
+    box-shadow: 0 5px 0 color-mix(in srgb, var(--cc) 40%, #000), inset 0 2px 0 rgba(255,255,255,.3);
+    font-family: 'Lalezar'; font-size: 24px; line-height: 1.2;
+    text-shadow: 0 2px 0 rgba(0,0,0,.35);
+  }
+  .cat .lbl { display: block; font-family: 'Cairo'; font-weight: 700; font-size: 13px; opacity: .8; margin-bottom: 4px; text-shadow: none; }
+  .tile {
+    position: relative; height: clamp(54px, 9.5vh, 86px); border-radius: 16px; border: none; cursor: pointer;
+    font-family: 'Lalezar'; font-size: clamp(28px, 4.5vh, 40px); color: var(--gold);
+    background:
+      radial-gradient(ellipse at 50% 0%, rgba(255,255,255,.25), transparent 60%),
+      linear-gradient(180deg, #3c2bd0, #1f1488);
+    box-shadow: 0 6px 0 #110a52, 0 12px 20px rgba(0,0,0,.4), inset 0 0 0 2px rgba(255,255,255,.08);
+    text-shadow: 0 3px 0 #6b3a00, 0 0 18px rgba(255,207,74,.5);
+    transition: transform .15s, box-shadow .15s, filter .15s;
+    overflow: hidden;
+  }
+  .tile::after {
+    content: ''; position: absolute; top: 0; left: -60%; width: 40%; height: 100%;
+    background: linear-gradient(100deg, transparent, rgba(255,255,255,.18), transparent);
+    transform: skewX(-20deg); transition: left .5s;
+  }
+  .tile:hover:not(.used) { transform: translateY(-4px) scale(1.03); filter: brightness(1.15); box-shadow: 0 10px 0 #110a52, 0 0 30px rgba(255,207,74,.35); }
+  .tile:hover:not(.used)::after { left: 120%; }
+  /* TEMP: question counts */
+  .tmp-count { display: block; font-family: 'Cairo'; font-weight: 700; font-size: 12px; line-height: 1.2; color: #cfe9ff; text-shadow: none; opacity: .85; }
+  .cat .tmp-count { color: #fff; margin-top: 2px; }
+  .tmp-total { font-family: 'Lalezar'; font-size: 22px; color: #ffe9a8; margin-top: -14px; opacity: .9; }
+  .tile.used {
+    cursor: default; color: transparent; text-shadow: none;
+    background: rgba(0,0,0,.35); box-shadow: inset 0 0 0 2px rgba(255,255,255,.06);
+  }
+  .tile.used .badge {
+    position: absolute; inset: 0; display: grid; place-items: center; font-size: 32px;
+  }
+
+  /* ---------- PLAYERS BAR ---------- */
+  .players {
+    position: fixed; bottom: 0; left: 0; right: 0; z-index: 5;
+    display: flex; justify-content: center; gap: 18px; padding: 14px 16px 18px;
+    background: linear-gradient(0deg, rgba(7,6,31,.95), rgba(7,6,31,.0));
+  }
+  .pcard {
+    display: flex; align-items: center; gap: 12px; padding: 8px 20px 8px 10px; border-radius: 999px;
+    background: rgba(255,255,255,.07); border: 3px solid transparent;
+    transition: transform .25s, border-color .25s, box-shadow .25s;
+    min-width: 190px;
+  }
+  .pcard .av { width: 54px; height: 54px; font-size: 28px; border-width: 3px; }
+  .pcard .nm { font-weight: 900; font-size: 17px; }
+  .pcard .sc { font-family: 'Lalezar'; font-size: 30px; color: var(--gold); line-height: 1; }
+  .pcard.active { border-color: var(--c); transform: translateY(-8px) scale(1.06); box-shadow: 0 0 30px var(--c); background: rgba(255,255,255,.14); }
+  .pop { animation: pop .5s; }
+  @keyframes pop { 0% { transform: scale(1) } 40% { transform: scale(1.5); color: #fff } 100% { transform: scale(1) } }
+
+  /* ---------- QUESTION MODAL ---------- */
+  .overlay {
+    position: fixed; inset: 0; z-index: 10; display: none; align-items: safe center; justify-content: center; overflow-y: auto;
+    background: rgba(5,4,25,.75); backdrop-filter: blur(8px); padding: 20px;
+  }
+  .overlay.show { display: flex; }
+  .qcard {
+    position: relative; width: min(860px, 100%);
+    background: linear-gradient(180deg, #24177a, #120b47);
+    border-radius: 32px; padding: 34px 38px 30px;
+    border: 3px solid var(--gold);
+    box-shadow: 0 0 0 8px rgba(255,207,74,.12), 0 0 80px rgba(255,207,74,.25), 0 40px 100px rgba(0,0,0,.7);
+    animation: zoomIn .45s cubic-bezier(.2,1.4,.4,1);
+  }
+  @keyframes zoomIn { from { transform: scale(.4) rotate(-4deg); opacity: 0 } to { transform: scale(1); opacity: 1 } }
+  .qhead { display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; }
+  .qmeta { display: flex; gap: 10px; align-items: center; }
+  .chip {
+    font-family: 'Lalezar'; font-size: 20px; padding: 4px 16px; border-radius: 999px;
+    background: var(--cc, rgba(255,255,255,.12));
+  }
+  .chip .lbl { font-family: 'Cairo'; font-weight: 700; font-size: 14px; opacity: .85; }
+  .chip.val { background: linear-gradient(180deg, #ffe07a, var(--gold-deep)); color: #4a2500; }
+  .chip.dbl { background: linear-gradient(90deg, var(--pink), #ff9a3d); animation: pulse 1s infinite; }
+  .timer { position: relative; width: 70px; height: 70px; }
+  .timer svg { transform: rotate(-90deg); }
+  .timer .num { position: absolute; inset: 0; display: grid; place-items: center; font-family: 'Lalezar'; font-size: 28px; }
+  .timer circle { fill: none; stroke-width: 7; }
+  .timer .bg { stroke: rgba(255,255,255,.12); }
+  .timer .fg { stroke: var(--teal); stroke-linecap: round; transition: stroke-dashoffset 1s linear, stroke .3s; }
+  .timer.warn .fg { stroke: var(--red); }
+  .timer.warn .num { color: var(--red); animation: pop .5s infinite; }
+
+  .ask { text-align: center; font-weight: 700; font-size: 19px; color: #c9c1ff; margin-bottom: 10px; }
+  .ask b { color: var(--teal); }
+  .ayah {
+    font-family: 'Amiri Quran', serif; font-size: 38px; line-height: 2.1; text-align: center;
+    padding: 18px 20px; margin-bottom: 22px; border-radius: 20px;
+    background: linear-gradient(180deg, #fffaf0, #f4e6c4);
+    color: #1d1442;
+    border: 3px solid #d9b35a;
+    box-shadow: inset 0 0 0 6px #fffaf0, inset 0 0 0 8px #e7c98a, 0 10px 30px rgba(0,0,0,.4);
+  }
+  .blank {
+    display: inline-block; min-width: 160px; height: 1.1em; vertical-align: middle; margin: 0 8px;
+    border-radius: 12px; border: 3px dashed #b48a2c;
+    background: linear-gradient(90deg, #f4e6c4, #ffe7a3, #f4e6c4); background-size: 200% 100%;
+    animation: shimmer 1.4s linear infinite;
+  }
+  .filled { color: #0f8a4c; padding: 0 6px; border-bottom: 3px solid #2fe08a; animation: pop .5s; }
+  @keyframes shimmer { from { background-position: 200% 0 } to { background-position: 0 0 } }
+  .options { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .opt {
+    position: relative; display: flex; align-items: center; gap: 14px; text-align: right;
+    padding: 12px 16px; border-radius: 18px; border: none; cursor: pointer; color: #fff;
+    background: linear-gradient(180deg, #4a37e0, #2c1d9e);
+    box-shadow: 0 6px 0 #170c55, 0 10px 20px rgba(0,0,0,.35);
+    transition: transform .12s, filter .12s, opacity .3s;
+    min-height: 74px;
+  }
+  .opt:hover:not(:disabled) { transform: translateY(-3px); filter: brightness(1.18); }
+  .opt .letter {
+    flex: none; width: 42px; height: 42px; border-radius: 12px; display: grid; place-items: center;
+    font-family: 'Lalezar'; font-size: 24px; color: #3a1d00;
+    background: linear-gradient(180deg, #ffe07a, var(--gold-deep)); box-shadow: 0 3px 0 #8a4b00;
+  }
+  .opt .t { font-family: 'Amiri Quran', serif; font-size: 25px; line-height: 1.9; }
+  .opt.correct { background: linear-gradient(180deg, #3ef59c, #12a55c); box-shadow: 0 6px 0 #0a5c33, 0 0 40px rgba(47,224,138,.7); animation: pop .5s; }
+  .opt.wrong { background: linear-gradient(180deg, #ff6b78, #c4192b); box-shadow: 0 6px 0 #6b0a14; animation: shake .45s; }
+  .opt.gone { opacity: .12; pointer-events: none; transform: scale(.95); }
+  .opt:disabled { cursor: default; }
+  @keyframes shake { 0%,100% { transform: translateX(0) } 20%,60% { transform: translateX(-10px) } 40%,80% { transform: translateX(10px) } }
+
+  .qfoot { display: flex; justify-content: space-between; align-items: center; margin-top: 22px; gap: 12px; flex-wrap: wrap; }
+  .lifelines { display: flex; gap: 10px; }
+  .life {
+    font-family: 'Lalezar'; font-size: 19px; padding: 8px 16px; border-radius: 14px; border: 2px solid rgba(255,255,255,.25);
+    background: rgba(255,255,255,.08); color: #fff; cursor: pointer; display: flex; gap: 8px; align-items: center;
+  }
+  .life:hover:not(:disabled) { background: rgba(255,255,255,.18); }
+  .life:disabled { opacity: .3; cursor: default; text-decoration: line-through; }
+  .who { font-family: 'Lalezar'; font-size: 22px; display: flex; align-items: center; gap: 10px; }
+  .who .av { width: 44px; height: 44px; font-size: 24px; border-width: 3px; }
+
+  .result {
+    display: none; margin-top: 20px; padding: 16px 20px; border-radius: 18px; text-align: center;
+    background: rgba(0,0,0,.3); border: 2px solid rgba(255,255,255,.12);
+  }
+  .result.show { display: block; animation: zoomIn .35s; }
+  .result .msg { font-family: 'Lalezar'; font-size: 34px; }
+  .result .full { font-family: 'Amiri Quran', serif; font-size: 24px; line-height: 2; color: #fff3cf; margin: 6px 0; }
+  .result .ref { color: var(--teal); font-weight: 700; }
+  .result .acts { display: flex; gap: 12px; justify-content: center; margin-top: 12px; }
+  .act-btn {
+    font-family: 'Lalezar'; font-size: 22px; padding: 8px 30px; border-radius: 16px; border: none; cursor: pointer;
+    background: linear-gradient(180deg, #fff0a8, var(--gold) 40%, var(--gold-deep)); color: #3a1d00;
+    box-shadow: 0 5px 0 #8a4b00;
+  }
+  .act-btn.steal { background: linear-gradient(180deg, #ff8fc4, var(--pink)); color: #fff; box-shadow: 0 5px 0 #8a0f4f; }
+
+  .toast {
+    position: fixed; top: 24px; left: 50%; transform: translateX(-50%) translateY(-120px); z-index: 30;
+    font-family: 'Lalezar'; font-size: 24px; padding: 12px 30px; border-radius: 18px;
+    background: linear-gradient(90deg, var(--pink), #ff9a3d); box-shadow: 0 10px 30px rgba(0,0,0,.5);
+    transition: transform .4s cubic-bezier(.2,1.4,.4,1);
+  }
+  .toast.show { transform: translateX(-50%) translateY(0); }
+
+  /* ---------- WINNER ---------- */
+  #end { flex-direction: column; align-items: center; justify-content: center; gap: 30px; padding: 40px; }
+  .crown { font-size: 80px; animation: swing 2s infinite; filter: drop-shadow(0 0 30px var(--gold)); }
+  .podium { display: flex; align-items: flex-end; gap: 18px; }
+  .step { display: flex; flex-direction: column; align-items: center; gap: 10px; }
+  .step .av { width: 86px; height: 86px; font-size: 44px; }
+  .step .blk {
+    width: 150px; border-radius: 18px 18px 6px 6px; display: flex; flex-direction: column; align-items: center; justify-content: flex-start;
+    padding-top: 14px; font-family: 'Lalezar'; color: #3a1d00;
+    background: linear-gradient(180deg, #fff0a8, var(--gold) 30%, var(--gold-deep));
+    box-shadow: 0 10px 30px rgba(0,0,0,.5);
+  }
+  .step .blk .rank { font-size: 48px; line-height: 1; }
+  .step .blk .pts { font-size: 22px; }
+  .step .nm { font-weight: 900; font-size: 20px; }
+
+  canvas#confetti { position: fixed; inset: 0; pointer-events: none; z-index: 50; }
+  .mock-note { position: fixed; bottom: 6px; left: 10px; z-index: 40; font-size: 12px; opacity: .45; }
+</style>
+</head>
+<body>
+<div class="stars" id="stars"></div>
+<canvas id="confetti"></canvas>
+<div class="toast" id="toast"></div>
+<div class="mock-note">Mockup · sample questions only</div>
+
+<!-- START -->
+<section class="screen active" id="start">
+  <div class="lantern">🌙</div>
+  <h1 class="logo">سين جيم القرآن</h1>
+  <div class="tagline">✦ أُنس ومُدارسة ✦</div>
+  <div class="tmp-total" id="tmpTotal"></div>
+  <div class="panel">
+    <h3>كم لاعب؟</h3>
+    <div class="count-row" id="countRow"></div>
+    <div class="avatars" id="avatars"></div>
+  </div>
+  <button class="big-btn" id="playBtn">يلّا نلعب!</button>
+</section>
+
+<!-- BOARD -->
+<section class="screen" id="board-screen">
+  <div class="topbar">
+    <div class="mini-logo">سين جيم القرآن</div>
+    <div class="turn-banner" id="turnBanner"></div>
+    <button class="ghost-btn" id="endBtn">🏁 إنهاء اللعبة</button>
+  </div>
+  <div class="board" id="board"></div>
+</section>
+
+<!-- END -->
+<section class="screen" id="end">
+  <div class="crown">👑</div>
+  <h1 class="logo" id="winnerTitle" style="font-size: 72px"></h1>
+  <div class="podium" id="podium"></div>
+  <button class="big-btn" onclick="location.reload()">جولة جديدة</button>
+</section>
+
+<div class="players" id="players" style="display:none"></div>
+
+<!-- QUESTION -->
+<div class="overlay" id="overlay">
+  <div class="qcard" id="qcard">
+    <div class="qhead">
+      <div class="qmeta" id="qmeta"></div>
+      <div class="timer" id="timer">
+        <svg width="70" height="70"><circle class="bg" cx="35" cy="35" r="30"/><circle class="fg" id="timerFg" cx="35" cy="35" r="30"/></svg>
+        <div class="num" id="timerNum">20</div>
+      </div>
+    </div>
+    <div class="ask" id="ask"></div>
+    <div class="ayah" id="ayah"></div>
+    <div class="options" id="options"></div>
+    <div class="qfoot">
+      <div class="who" id="who"></div>
+      <div class="lifelines">
+        <button class="life" id="life5050">✂️ ٥٠:٥٠</button>
+      </div>
+    </div>
+    <div class="result" id="result"></div>
+  </div>
+</div>
+
+<script>
+/* ============ SAMPLE DATA ============
+   All Quran text below is copied verbatim from api.quran.com (text_uthmani).
+   Options are real fragments from the referenced ayahs — nothing is altered. */
+const CATS = [
+  { name: 'أكمل الآية', color: '#ff8a3d', qs: [
+    { ask: 'أكمل الآية من <b>سورة الفاتحة</b>', prompt: 'ٱلْحَمْدُ لِلَّهِ', blankAfter: true,
+      options: [
+        { t: 'رَبِّ ٱلْعَـٰلَمِينَ', ref: 'الفاتحة ٢', ok: true },
+        { t: 'ٱلَّذِى خَلَقَ ٱلسَّمَـٰوَٰتِ وَٱلْأَرْضَ', ref: 'الأنعام ١' },
+        { t: 'ٱلَّذِىٓ أَنزَلَ عَلَىٰ عَبْدِهِ ٱلْكِتَـٰبَ', ref: 'الكهف ١' },
+        { t: 'فَاطِرِ ٱلسَّمَـٰوَٰتِ وَٱلْأَرْضِ', ref: 'فاطر ١' } ],
+      full: 'ٱلْحَمْدُ لِلَّهِ رَبِّ ٱلْعَـٰلَمِينَ', fullRef: 'الفاتحة: ٢' },
+    { ask: 'أكمل الآية من <b>سورة الأنعام</b>', prompt: 'وَمَا ٱلْحَيَوٰةُ ٱلدُّنْيَآ إِلَّا', blankAfter: true,
+      options: [
+        { t: 'لَعِبٌ وَلَهْوٌ', ref: 'الأنعام ٣٢', ok: true },
+        { t: 'لَهْوٌ وَلَعِبٌ', ref: 'العنكبوت ٦٤' },
+        { t: 'مَتَـٰعُ ٱلْغُرُورِ', ref: 'آل عمران ١٨٥' },
+        { t: 'لَعِبٌ وَلَهْوٌ وَزِينَةٌ', ref: 'الحديد ٢٠' } ],
+      full: 'وَمَا ٱلْحَيَوٰةُ ٱلدُّنْيَآ إِلَّا لَعِبٌ وَلَهْوٌ ۖ وَلَلدَّارُ ٱلْـَٔاخِرَةُ خَيْرٌ لِّلَّذِينَ يَتَّقُونَ ۗ أَفَلَا تَعْقِلُونَ', fullRef: 'الأنعام: ٣٢' },
+    { ask: 'أكمل الآية <b>٤٨ من سورة البقرة</b>', prompt: 'وَٱتَّقُوا۟ يَوْمًا لَّا تَجْزِى نَفْسٌ عَن نَّفْسٍ شَيْـًٔا', blankAfter: true,
+      options: [
+        { t: 'وَلَا يُقْبَلُ مِنْهَا شَفَـٰعَةٌ وَلَا يُؤْخَذُ مِنْهَا عَدْلٌ', ref: 'البقرة ٤٨', ok: true },
+        { t: 'وَلَا يُقْبَلُ مِنْهَا عَدْلٌ وَلَا تَنفَعُهَا شَفَـٰعَةٌ', ref: 'البقرة ١٢٣' } ],
+      full: 'وَٱتَّقُوا۟ يَوْمًا لَّا تَجْزِى نَفْسٌ عَن نَّفْسٍ شَيْـًٔا وَلَا يُقْبَلُ مِنْهَا شَفَـٰعَةٌ وَلَا يُؤْخَذُ مِنْهَا عَدْلٌ وَلَا هُمْ يُنصَرُونَ', fullRef: 'البقرة: ٤٨' },
+  ]},
+  { name: 'خاتمة الآية', color: '#2ec5ff', qs: [
+    { ask: 'كيف تُختم <b>آية الكرسي</b>؟', prompt: '… وَسِعَ كُرْسِيُّهُ ٱلسَّمَـٰوَٰتِ وَٱلْأَرْضَ ۖ وَلَا يَـُٔودُهُۥ حِفْظُهُمَا ۚ', blankAfter: true,
+      options: [
+        { t: 'وَهُوَ ٱلْعَلِىُّ ٱلْعَظِيمُ', ref: 'البقرة ٢٥٥', ok: true },
+        { t: 'وَهُوَ ٱلْعَلِىُّ ٱلْكَبِيرُ', ref: 'سبأ ٢٣' },
+        { t: 'وَهُوَ ٱللَّطِيفُ ٱلْخَبِيرُ', ref: 'الأنعام ١٠٣' },
+        { t: 'وَهُوَ ٱلسَّمِيعُ ٱلْعَلِيمُ', ref: 'البقرة ١٣٧' } ],
+      full: '… وَسِعَ كُرْسِيُّهُ ٱلسَّمَـٰوَٰتِ وَٱلْأَرْضَ ۖ وَلَا يَـُٔودُهُۥ حِفْظُهُمَا ۚ وَهُوَ ٱلْعَلِىُّ ٱلْعَظِيمُ', fullRef: 'البقرة: ٢٥٥' },
+  ]},
+  { name: 'ما بعدها؟', color: '#b46bff', qs: [
+    { ask: 'ما الآية التالية؟ — <b>سورة الناس</b>', prompt: 'قُلْ أَعُوذُ بِرَبِّ ٱلنَّاسِ', blankAfter: true,
+      options: [
+        { t: 'مَلِكِ ٱلنَّاسِ', ref: 'الناس ٢', ok: true },
+        { t: 'إِلَـٰهِ ٱلنَّاسِ', ref: 'الناس ٣' },
+        { t: 'مِن شَرِّ مَا خَلَقَ', ref: 'الفلق ٢' },
+        { t: 'مِن شَرِّ ٱلْوَسْوَاسِ ٱلْخَنَّاسِ', ref: 'الناس ٤' } ],
+      full: 'قُلْ أَعُوذُ بِرَبِّ ٱلنَّاسِ ۝ مَلِكِ ٱلنَّاسِ', fullRef: 'الناس: ١–٢' },
+  ]},
+  { name: 'من أي سورة؟', color: '#2fe08a', qs: [
+    { ask: 'من أي سورة هذه الآية؟', prompt: 'فَبِأَىِّ ءَالَآءِ رَبِّكُمَا تُكَذِّبَانِ', surah: true,
+      options: [
+        { t: 'الرحمن', ok: true }, { t: 'الواقعة' }, { t: 'القمر' }, { t: 'الملك' } ],
+      full: 'فَبِأَىِّ ءَالَآءِ رَبِّكُمَا تُكَذِّبَانِ', fullRef: 'الرحمن: ١٣' },
+    { ask: 'من أي سورة هذه الآية؟', prompt: 'وَلَقَدْ يَسَّرْنَا ٱلْقُرْءَانَ لِلذِّكْرِ فَهَلْ مِن مُّدَّكِرٍ', surah: true,
+      options: [
+        { t: 'القمر', ok: true }, { t: 'الرحمن' }, { t: 'الحاقة' }, { t: 'النجم' } ],
+      full: 'وَلَقَدْ يَسَّرْنَا ٱلْقُرْءَانَ لِلذِّكْرِ فَهَلْ مِن مُّدَّكِرٍ', fullRef: 'القمر: ١٧' },
+  ]},
+];
+const VALUES = [100, 200, 300, 400, 500];
+// TEMP: generated question counts per category × level (from data/build/questions.json).
+const TEMP_COUNTS = [[29,64,340,1465,267],[60,467,897,290,1638],[63,698,2192,1078,67],[417,815,2937,522,142]];
+const AVATARS = ['🦁', '🐬', '🦉', '🐢'];
+const COLORS = ['var(--p1)', 'var(--p2)', 'var(--p3)', 'var(--p4)'];
+const DEFAULT_NAMES = ['لاعب ١', 'لاعب ٢', 'لاعب ٣', 'لاعب ٤'];
+const ar = n => String(n).replace(/\d/g, d => '٠١٢٣٤٥٦٧٨٩'[d]);
+
+let playerCount = 2;
+let players = [];
+let turn = 0;
+const used = {};
+const doubleCell = `${1 + Math.floor(Math.random() * 3)}-${2 + Math.floor(Math.random() * 3)}`;
+
+/* ---------- stars ---------- */
+const starsEl = document.getElementById('stars');
+for (let i = 0; i < 70; i++) {
+  const s = document.createElement('i');
+  s.style.left = Math.random() * 100 + '%';
+  s.style.top = Math.random() * 100 + '%';
+  s.style.animationDelay = Math.random() * 3 + 's';
+  if (Math.random() > .8) { s.style.width = s.style.height = '3px'; }
+  starsEl.appendChild(s);
+}
+
+/* ---------- sound ---------- */
+let actx;
+function tone(freqs, dur = .12, type = 'triangle', gap = .09, vol = .15) {
+  try {
+    actx = actx || new (window.AudioContext || window.webkitAudioContext)();
+    freqs.forEach((f, i) => {
+      const o = actx.createOscillator(), g = actx.createGain();
+      o.type = type; o.frequency.value = f;
+      const t = actx.currentTime + i * gap;
+      g.gain.setValueAtTime(vol, t);
+      g.gain.exponentialRampToValueAtTime(.001, t + dur);
+      o.connect(g).connect(actx.destination);
+      o.start(t); o.stop(t + dur);
+    });
+  } catch (e) {}
+}
+const sfx = {
+  click: () => tone([660], .06, 'square', 0, .05),
+  open: () => tone([392, 523, 659], .15, 'triangle', .07),
+  right: () => tone([523, 659, 784, 1046], .2, 'triangle', .08, .18),
+  wrong: () => tone([180, 140], .3, 'sawtooth', .15, .1),
+  tick: () => tone([880], .04, 'square', 0, .04),
+};
+
+/* ---------- start screen ---------- */
+// TEMP: total generated questions.
+document.getElementById('tmpTotal').textContent =
+  `${ar(TEMP_COUNTS.flat().reduce((x, y) => x + y, 0).toLocaleString('en'))} سؤال`;
+const countRow = document.getElementById('countRow');
+const avatarsEl = document.getElementById('avatars');
+[1, 2, 3, 4].forEach(n => {
+  const b = document.createElement('button');
+  b.className = 'count-btn' + (n === playerCount ? ' sel' : '');
+  b.textContent = ar(n);
+  b.onclick = () => { playerCount = n; sfx.click(); renderStart(); };
+  countRow.appendChild(b);
+});
+AVATARS.forEach((a, i) => {
+  const c = document.createElement('div');
+  c.className = 'av-card';
+  c.innerHTML = `<div class="av" style="--c:${COLORS[i]}">${a}</div><input value="${DEFAULT_NAMES[i]}" maxlength="10">`;
+  avatarsEl.appendChild(c);
+});
+function renderStart() {
+  [...countRow.children].forEach((b, i) => b.classList.toggle('sel', i + 1 === playerCount));
+  [...avatarsEl.children].forEach((c, i) => c.classList.toggle('off', i >= playerCount));
+}
+renderStart();
+
+document.getElementById('playBtn').onclick = () => {
+  sfx.open();
+  players = [...avatarsEl.children].slice(0, playerCount).map((c, i) => ({
+    name: c.querySelector('input').value || DEFAULT_NAMES[i], avatar: AVATARS[i], color: COLORS[i], score: 0,
+    lifelines: { half: true },
+  }));
+  show('board-screen');
+  document.getElementById('players').style.display = 'flex';
+  buildBoard(); renderPlayers();
+};
+
+function show(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.toggle('active', s.id === id));
+}
+
+/* ---------- board ---------- */
+function buildBoard() {
+  const b = document.getElementById('board');
+  b.innerHTML = '';
+  CATS.forEach(c => {
+    const h = document.createElement('div');
+    h.className = 'cat'; h.style.setProperty('--cc', c.color);
+    const total = TEMP_COUNTS[CATS.indexOf(c)].reduce((x, y) => x + y, 0);
+    h.innerHTML = `<span class="lbl">التصنيف</span>${c.name}<span class="tmp-count">${ar(total.toLocaleString('en'))} سؤال</span>`;
+    b.appendChild(h);
+  });
+  VALUES.forEach((v, r) => CATS.forEach((c, ci) => {
+    const t = document.createElement('button');
+    t.className = 'tile';
+    t.innerHTML = `${ar(v)}<span class="tmp-count">${ar(TEMP_COUNTS[ci][r])} سؤال</span>`;
+    t.id = `t-${ci}-${r}`;
+    t.onclick = () => !used[t.id] && openQ(ci, r);
+    b.appendChild(t);
+  }));
+}
+
+function renderPlayers() {
+  const el = document.getElementById('players');
+  el.innerHTML = players.map((p, i) => `
+    <div class="pcard ${i === turn ? 'active' : ''}" style="--c:${p.color}">
+      <div class="av" style="--c:${p.color}">${p.avatar}</div>
+      <div><div class="nm">${p.name}</div><div class="sc" id="sc-${i}">${ar(p.score)}</div></div>
+    </div>`).join('');
+  const p = players[turn];
+  const tb = document.getElementById('turnBanner');
+  tb.style.setProperty('--c', p.color);
+  tb.innerHTML = `${p.avatar} دور ${p.name} — اختر سؤالاً!`;
+}
+
+/* ---------- question ---------- */
+let cur = null, timerId = null, timeLeft = 20;
+const TOTAL = 20, CIRC = 2 * Math.PI * 30;
+
+function openQ(ci, r) {
+  sfx.open();
+  const cat = CATS[ci];
+  const q = cat.qs[Math.min(Math.floor(r * cat.qs.length / VALUES.length), cat.qs.length - 1)];
+  const isDouble = `${ci}-${r}` === doubleCell;
+  cur = { ci, r, q, value: VALUES[r] * (isDouble ? 2 : 1), answerer: turn, stealing: false, tried: new Set() };
+  if (isDouble) toast('✨ خانة مضاعفة! النقاط × ٢');
+
+  document.getElementById('qmeta').innerHTML = `
+    <span class="chip" style="--cc:${cat.color}"><span class="lbl">التصنيف:</span> ${cat.name}</span>
+    <span class="chip val">${ar(cur.value)}</span>
+    ${isDouble ? '<span class="chip dbl">× ٢</span>' : ''}`;
+  document.getElementById('ask').innerHTML = q.ask;
+  document.getElementById('ayah').innerHTML = q.surah
+    ? `﴿ ${q.prompt} ﴾`
+    : `${q.prompt} <span class="blank"></span>`;
+
+  const opts = [...q.options].sort(() => Math.random() - .5);
+  const letters = ['أ', 'ب', 'ج', 'د'];
+  const oel = document.getElementById('options');
+  oel.innerHTML = '';
+  opts.forEach((o, i) => {
+    const b = document.createElement('button');
+    b.className = 'opt';
+    b.innerHTML = `<span class="letter">${letters[i]}</span><span class="t" ${q.surah ? 'style="font-family:Lalezar;font-size:28px"' : ''}>${o.t}</span>`;
+    b.onclick = () => answer(b, o);
+    b._o = o;
+    oel.appendChild(b);
+  });
+
+  document.getElementById('result').className = 'result';
+  setupLifelines();
+  renderWho();
+  document.getElementById('overlay').classList.add('show');
+  startTimer();
+}
+
+function renderWho() {
+  const p = players[cur.answerer];
+  document.getElementById('who').innerHTML =
+    `<div class="av" style="--c:${p.color}">${p.avatar}</div>${cur.stealing ? '🥷 فرصة سرقة: ' : ''}${p.name}`;
+}
+
+function setupLifelines() {
+  const p = players[cur.answerer];
+  const h = document.getElementById('life5050');
+  h.disabled = !p.lifelines.half || cur.q.options.length < 4 || cur.stealing;
+  h.onclick = () => {
+    p.lifelines.half = false; h.disabled = true; sfx.click();
+    const wrong = [...document.querySelectorAll('.opt')].filter(b => !b._o.ok && !b.disabled);
+    wrong.sort(() => Math.random() - .5).slice(0, 2).forEach(b => { b.classList.add('gone'); b.disabled = true; });
+  };
+}
+
+function startTimer() {
+  clearInterval(timerId);
+  timeLeft = TOTAL;
+  const fg = document.getElementById('timerFg');
+  fg.style.strokeDasharray = CIRC;
+  fg.style.transition = 'none'; fg.style.strokeDashoffset = 0;
+  requestAnimationFrame(() => { fg.style.transition = ''; });
+  updateTimer();
+  timerId = setInterval(() => {
+    timeLeft--; updateTimer();
+    if (timeLeft <= 5 && timeLeft > 0) sfx.tick();
+    if (timeLeft <= 0) { clearInterval(timerId); answer(null, null); }
+  }, 1000);
+}
+function updateTimer() {
+  document.getElementById('timerNum').textContent = ar(Math.max(timeLeft, 0));
+  document.getElementById('timerFg').style.strokeDashoffset = CIRC * (1 - timeLeft / TOTAL);
+  document.getElementById('timer').classList.toggle('warn', timeLeft <= 5);
+}
+
+function answer(btn, o) {
+  clearInterval(timerId);
+  const all = [...document.querySelectorAll('.opt')];
+  all.forEach(b => b.disabled = true);
+  const p = players[cur.answerer];
+  const res = document.getElementById('result');
+
+  if (o && o.ok) {
+    btn.classList.add('correct'); sfx.right(); confetti();
+    const pts = cur.stealing ? Math.round(cur.value / 2) : cur.value;
+    p.score += pts;
+    finishCell(p);
+    res.innerHTML = `
+      <div class="msg" style="color:var(--green)">🎉 أحسنت يا ${p.name}! +${ar(pts)}</div>
+      <div class="full">﴿ ${cur.q.full} ﴾</div>
+      <div class="ref">${cur.q.fullRef}</div>
+      <div class="acts"><button class="act-btn" onclick="closeQ()">متابعة ←</button></div>`;
+  } else {
+    if (btn) { btn.classList.add('wrong'); cur.tried.add(btn); }
+    sfx.wrong();
+    const ref = o && o.ref ? `<div class="ref">هذه من: ${o.ref} 😉</div>` : '';
+    const canSteal = !cur.stealing && players.length > 1;
+    if (canSteal) {
+      const next = (cur.answerer + 1) % players.length;
+      res.innerHTML = `
+        <div class="msg" style="color:var(--red)">${o ? '❌ ليست هذه!' : '⏰ انتهى الوقت!'}</div>${ref}
+        <div class="acts">
+          <button class="act-btn steal" onclick="steal(${next})">🥷 ${players[next].name} يسرق (نصف النقاط)</button>
+          <button class="act-btn" onclick="reveal()">اكشف الإجابة</button>
+        </div>`;
+    } else {
+      res.innerHTML = `<div class="msg" style="color:var(--red)">${o ? '❌ ليست هذه!' : '⏰ انتهى الوقت!'}</div>${ref}
+        <div class="acts"><button class="act-btn" onclick="reveal()">اكشف الإجابة</button></div>`;
+    }
+  }
+  res.className = 'result show';
+}
+
+function steal(next) {
+  cur.answerer = next; cur.stealing = true;
+  document.querySelectorAll('.opt').forEach(b => { if (!cur.tried.has(b) && !b.classList.contains('gone')) b.disabled = false; });
+  document.getElementById('result').className = 'result';
+  setupLifelines(); renderWho(); sfx.open();
+  startTimer();
+}
+
+function reveal() {
+  document.querySelectorAll('.opt').forEach(b => { if (b._o.ok) b.classList.add('correct'); });
+  finishCell(null);
+  document.getElementById('result').innerHTML = `
+    <div class="full">﴿ ${cur.q.full} ﴾</div>
+    <div class="ref">${cur.q.fullRef}</div>
+    <div class="acts"><button class="act-btn" onclick="closeQ()">متابعة ←</button></div>`;
+}
+
+function fillBlank() {
+  const b = document.querySelector('#ayah .blank');
+  const ok = cur.q.options.find(o => o.ok);
+  if (b && !cur.q.surah) b.outerHTML = `<span class="filled">${ok.t}</span>`;
+}
+
+function finishCell(winner) {
+  fillBlank();
+  const t = document.getElementById(`t-${cur.ci}-${cur.r}`);
+  used[t.id] = true;
+  t.classList.add('used');
+  t.innerHTML = `<span class="badge">${winner ? winner.avatar : '—'}</span>`;
+  if (winner) t.style.boxShadow = `inset 0 0 0 3px ${winner.color}, 0 0 20px ${winner.color}`;
+}
+
+function closeQ() {
+  document.getElementById('overlay').classList.remove('show');
+  turn = (turn + 1) % players.length;
+  renderPlayers();
+  const i = players.indexOf(players.find((p, idx) => idx === cur.answerer));
+  const sc = document.getElementById(`sc-${i}`); if (sc) sc.classList.add('pop');
+  if (Object.keys(used).length === VALUES.length * CATS.length) endGame();
+}
+
+/* ---------- end ---------- */
+document.getElementById('endBtn').onclick = endGame;
+function endGame() {
+  document.getElementById('players').style.display = 'none';
+  const ranked = [...players].sort((a, b) => b.score - a.score);
+  document.getElementById('winnerTitle').textContent = `🏆 ${ranked[0].name}`;
+  const order = ranked.length >= 3 ? [ranked[1], ranked[0], ranked[2], ...ranked.slice(3)] : ranked.length === 2 ? [ranked[1], ranked[0]] : ranked;
+  const heights = { 0: 220, 1: 160, 2: 120, 3: 90 };
+  document.getElementById('podium').innerHTML = order.map(p => {
+    const rk = ranked.indexOf(p);
+    return `<div class="step"><div class="av" style="--c:${p.color}">${p.avatar}</div><div class="nm">${p.name}</div>
+      <div class="blk" style="height:${heights[rk]}px"><div class="rank">${ar(rk + 1)}</div><div class="pts">${ar(p.score)} نقطة</div></div></div>`;
+  }).join('');
+  show('end'); sfx.right(); confetti(); setTimeout(confetti, 600);
+}
+
+/* ---------- fx ---------- */
+function toast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2400);
+}
+const cv = document.getElementById('confetti'), cx = cv.getContext('2d');
+let parts = [], raf = null;
+function confetti() {
+  cv.width = innerWidth; cv.height = innerHeight;
+  const cols = ['#ffcf4a', '#2ee6c5', '#ff4fa3', '#b46bff', '#2ec5ff', '#fff'];
+  for (let i = 0; i < 160; i++) parts.push({
+    x: innerWidth / 2, y: innerHeight / 2.2, vx: (Math.random() - .5) * 18, vy: Math.random() * -18 - 4,
+    s: 6 + Math.random() * 8, c: cols[i % cols.length], r: Math.random() * 6, vr: (Math.random() - .5) * .4, life: 120,
+  });
+  if (!raf) loop();
+}
+function loop() {
+  cx.clearRect(0, 0, cv.width, cv.height);
+  parts.forEach(p => {
+    p.x += p.vx; p.y += p.vy; p.vy += .45; p.vx *= .99; p.r += p.vr; p.life--;
+    cx.save(); cx.translate(p.x, p.y); cx.rotate(p.r); cx.fillStyle = p.c;
+    cx.globalAlpha = Math.max(p.life / 120, 0); cx.fillRect(-p.s / 2, -p.s / 4, p.s, p.s / 2); cx.restore();
+  });
+  parts = parts.filter(p => p.life > 0 && p.y < cv.height + 40);
+  raf = parts.length ? requestAnimationFrame(loop) : (cx.clearRect(0, 0, cv.width, cv.height), null);
+}
+</script>
+</body>
+</html>
